@@ -11,12 +11,16 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     // GPS 사용을 위한 멤버 변수 선언
     LocationManager locationManager;
     LocationListener locationListener;
+
+    double latitude;
+    double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
             // GPS의 정보를 얻어 올 수 있는 메소드
             @Override
             public void onLocationChanged(@NonNull Location location) {
-                Log.i("MyLocation", "위도 : " + location.getLatitude());
-                Log.i("MyLocation", "경도 : " + location.getLongitude());
+                latitude = Log.i("MyLocation", "위도 : " + location.getLatitude());
+                longitude = Log.i("MyLocation", "경도 : " + location.getLongitude());
             }
         };
 
@@ -50,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
         // 예시) 3초마다 위치 정보 업데이트
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                 3000, -1, locationListener);
+        
+        TextView printLog = new TextView(this);
+        printLog.setText("위도 : " + latitude + " 경도 : " + longitude);
+        setContentView(printLog);
     }
 
     // 앱 권한 요청 설정 메소드
