@@ -5,21 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Address;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
-
-import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
     double latitude;
     double longitude;
     TextView tvLocation;  // TextView 선언
+    TextView tvCounter;   // 카운터 값을 표시하는 TextView
+    Button btnIncrease;   // 수치를 증가시킬 버튼
+    int counter = 0;      // 카운터 값 (0부터 시작)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +36,19 @@ public class MainActivity extends AppCompatActivity {
 
         // TextView 초기화
         tvLocation = findViewById(R.id.tvLocation);
+        tvCounter = findViewById(R.id.tvCounter);  // 카운터를 표시할 TextView
+        btnIncrease = findViewById(R.id.btnIncrease);  // 카운터를 증가시킬 버튼
+
+        // 버튼 클릭 리스너 설정
+        btnIncrease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (counter < 100) {
+                    counter += 1;
+                    tvCounter.setText("Counter: " + counter);
+                }
+            }
+        });
 
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -68,16 +79,6 @@ public class MainActivity extends AppCompatActivity {
         // 3초마다 위치 업데이트 요청
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                 3000, -1, locationListener);
-    }
-
-    public void onToggleClicked(View view) {
-        boolean on = ((ToggleButton) view).isChecked();
-
-        if (on) {
-            Toast.makeText(this, "Press on", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Unchecked", Toast.LENGTH_SHORT).show();
-        }
     }
 
     // 앱 권한 요청 설정 메소드
