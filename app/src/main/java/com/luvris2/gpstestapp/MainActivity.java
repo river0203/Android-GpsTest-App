@@ -61,8 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 longitude = location.getLongitude();
 
                 // 로그 출력
-                Log.i("MyLocation", "위도 : " + latitude);
-                Log.i("MyLocation", "경도 : " + longitude);
+                Log.i("MyLocation", "위도 : " + latitude + ", 경도 : " + longitude);
 
                 // TextView에 위도 경도 표시
                 tvLocation.setText("Latitude: " + latitude + "\nLongitude: " + longitude);
@@ -90,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 tvSpeed.setText("Speed: " + currentSpeed + " m/s");
+                Log.i("SpeedInfo", "현재 속도: " + currentSpeed + " m/s");
                 speedHandler.postDelayed(this, 1000);  // 1초마다 반복
             }
         }, 1000);
@@ -104,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
 
             if (timeElapsed > 0) {
                 currentSpeed = distance / timeElapsed;  // 속도 계산 (m/s)
+
+                // 3초마다 로그 출력
+                Log.i("SpeedLog", "3초 간격으로 측정된 속도: " + currentSpeed + " m/s");
             }
         }
         previousLocation = newLocation;  // 현재 위치를 이전 위치로 업데이트
