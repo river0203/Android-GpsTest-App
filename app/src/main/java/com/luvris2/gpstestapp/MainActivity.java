@@ -28,10 +28,13 @@ public class MainActivity extends AppCompatActivity {
     TextView tvSpeed;     // 속도를 표시할 TextView
     Button btnIncrease;   // 수치를 증가시킬 버튼
     int counter = 0;      // 카운터 값 (0부터 시작)
+    boolean isCounterRunning = false; // 카운터가 실행 중인지 여부
 
     Location previousLocation = null;  // 이전 GPS 위치
     float currentSpeed = 0;            // 현재 속도
     Handler speedHandler = new Handler();  // 1초마다 속도 업데이트를 위한 핸들러
+    Handler counterHandler = new Handler(); // 카운터 업데이트를 위한 핸들러
+    Runnable counterRunnable;  // 카운터 값을 증가시키는 Runnable
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +47,28 @@ public class MainActivity extends AppCompatActivity {
         tvSpeed = findViewById(R.id.tvSpeed);      // 속도를 표시할 TextView
         btnIncrease = findViewById(R.id.btnIncrease);  // 카운터를 증가시킬 버튼
 
+        // 카운터 Runnable 정의
+        counterRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (counter < 100) {
+                    counter += 1;
+                    tvCounter.setText("Counter: " + counter);
+                    counterHandler.postDelayed(this, 1000); // 1초마다 카운터 증가
+                }
+            }
+        };
+
         // 버튼 클릭 리스너 설정
         btnIncrease.setOnClickListener(v -> {
-            if (counter < 100) {
-                counter += 1;
-                tvCounter.setText("Counter: " + counter);
+            if (isCounterRunning) {
+                // 카운터 실행 중이면 정지
+                counterHandler.removeCallbacks(counterRunnable);  // 카운터 정지
+                isCounterRunning = false;
+            } else {
+                // 카운터가 정지 상태면 시작
+                isCounterRunning = true;
+                counterHandler.post(counterRunnable);  // 카운터 시작
             }
         });
 
